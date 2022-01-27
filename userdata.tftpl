@@ -11,9 +11,12 @@ Y
 sudo apt install net-tools
 sudo /opt/lampp/lampp start
 sudo rm -rf /opt/lampp/htdocs/*
+sudo chmod 777 /opt/lampp/htdocs
 sudo git clone https://github.com/Gunamoni11/rds_ec2.git
 sudo cp -r abcd/sourcecode/cpms/* /opt/lampp/htdocs
 sudo chmod 777 /opt/lampp/htdocs/includes/dbconnection.php
-sudo sed -i 's/localhost/${endpoint}/g' /opt/lampp/htdocs/includes/dbconnection.php
-sudo sed -i 's/root/${username}/g' /opt/lampp/htdocs/includes/dbconnection.php
+sudo sed -i.bak 's/localhost/${endpoint}/g' /opt/lampp/htdocs/includes/dbconnection.php
 sudo sed -i 's/password/${password}/g' /opt/lampp/htdocs/includes/dbconnection.php
+sudo chmod 777 /opt/lampp/etc/extra/httpd-xampp.conf
+sudo sed -i.bak 's/local/all granted/g' /opt/lampp/etc/extra/httpd-xampp.conf
+sudo /opt/lampp/lampp restart
