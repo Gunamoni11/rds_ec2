@@ -1,9 +1,9 @@
 <?php 
 // DB credentials.
 define('DB_HOST','localhost');
-define('DB_USER','root');
+define('DB_USER','admin');
 define('DB_PASS','password');
-define('DB_NAME','cpms');
+define('DB_NAME','cpmsdb');
 // Establish database connection.
 try
 {
