@@ -1,30 +1,26 @@
-provider "aws" {
-  region = "us-east-2"
-}
-resource "aws_instance" "myec2" {
-  depends_on = [aws_db_instance.default]
-  ami           = "ami-0fb653ca2d3203ac1"
-  instance_type = "t2.micro"
-  subnet_id   = "subnet-04bb8948"
-  key_name = "terra"
-  user_data = templatefile("${path.module}/userdata.tftpl", {endpoint = aws_db_instance.default.endpoint,password = aws_db_instance.default.password})
-  iam_instance_profile = "demo_full_access"
-  security_groups = ["sg-0244e3f85210cc582"]
-  tags = {
-    Name = "Ec2tf"
+resource "aws_security_group" "allow_tls" {
+  name        = "allow_tls"
+  description = "Allow TLS inbound traffic"
+  vpc_id      = vpc-0f607673eab7d2eb7
+
+  ingress {
+    description      = "TLS from VPC"
+    from_port        = 443
+    to_port          = 443
+    protocol         = "tcp"
+    cidr_blocks      = [aws_vpc.main.cidr_block]
+    ipv6_cidr_blocks = [aws_vpc.main.ipv6_cidr_block]
   }
-}
-resource "aws_db_instance" "default" {
-  allocated_storage    = 10
-  engine               = "mysql"
-  engine_version       = "5.7"
-  instance_class       = "db.t2.micro"
-  name                 = "cpms"
-  identifier           = "mydb"
-  username             = "admin"
-  password             = "Nareshkumar"
-  parameter_group_name = "default.mysql5.7"
-  skip_final_snapshot  = true
-  publicly_accessible  = true
-  security_group_names = ["sg-0244e3f85210cc582"]
+
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+
+  tags = {
+    Name = "allow_tls"
+  }
 }
